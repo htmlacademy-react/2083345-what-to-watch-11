@@ -1,12 +1,14 @@
 import MovieCard from '../../components/movie-card/movie-card';
+import Logo from '../../components/logo/logo';
+import Footer from '../../components/footer/footer';
 
-type MainScreenPropType = {
+type FeaturedMoviePropsType = {
   title: string;
   genre: string;
   releaseYear: number;
 }
 
-export default function HomeScreen(props: MainScreenPropType): JSX.Element {
+export default function HomeScreen(featuredProps: FeaturedMoviePropsType): JSX.Element {
   return (
     <html lang="en">
       <head>
@@ -19,19 +21,13 @@ export default function HomeScreen(props: MainScreenPropType): JSX.Element {
 
       <section className="film-card">
         <div className="film-card__bg">
-          <img src="img/bg-the-grand-budapest-hotel.jpg" alt={props.title}/>
+          <img src="img/bg-the-grand-budapest-hotel.jpg" alt={featuredProps.title}/>
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
 
         <header className="page-header film-card__head">
-          <div className="logo">
-            <a className="logo__link">
-              <span className="logo__letter logo__letter--1">W</span>
-              <span className="logo__letter logo__letter--2">T</span>
-              <span className="logo__letter logo__letter--3">W</span>
-            </a>
-          </div>
+          <Logo />
 
           <ul className="user-block">
             <li className="user-block__item">
@@ -48,16 +44,16 @@ export default function HomeScreen(props: MainScreenPropType): JSX.Element {
         <div className="film-card__wrap">
           <div className="film-card__info">
             <div className="film-card__poster">
-              <img src="img/the-grand-budapest-hotel-poster.jpg" alt={`${props.title} poster`} width="218"
+              <img src="img/the-grand-budapest-hotel-poster.jpg" alt={`${featuredProps.title} poster`} width="218"
                 height="327"
               />
             </div>
 
             <div className="film-card__desc">
-              <h2 className="film-card__title">{props.title}</h2>
+              <h2 className="film-card__title">{featuredProps.title}</h2>
               <p className="film-card__meta">
-                <span className="film-card__genre">{props.genre}</span>
-                <span className="film-card__year">{props.releaseYear}</span>
+                <span className="film-card__genre">{featuredProps.genre}</span>
+                <span className="film-card__year">{featuredProps.releaseYear}</span>
               </p>
 
               <div className="film-card__buttons">
@@ -128,19 +124,7 @@ export default function HomeScreen(props: MainScreenPropType): JSX.Element {
           </div>
         </section>
 
-        <footer className="page-footer">
-          <div className="logo">
-            <a className="logo__link logo__link--light">
-              <span className="logo__letter logo__letter--1">W</span>
-              <span className="logo__letter logo__letter--2">T</span>
-              <span className="logo__letter logo__letter--3">W</span>
-            </a>
-          </div>
-
-          <div className="copyright">
-            <p>© 2022 What to watch Ltd.</p>
-          </div>
-        </footer>
+        <Footer/>
       </div>
     </html>
   );
