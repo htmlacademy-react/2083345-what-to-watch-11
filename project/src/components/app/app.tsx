@@ -8,24 +8,28 @@ import AddReviewScreen from '../../pages/add-review-screen/add-review-screen';
 import PrivateRoute from '../private-route/private-route';
 import PlayerScreen from '../../pages/player-screen/player-screen';
 import NotFoundScreen from '../../pages/not-found/not-found-screen';
+import {MovieType, ReviewType} from '../../types/types';
 
-type FeaturedMoviePropsType = {
-  title: string;
-  genre: string;
-  releaseYear: number;
+export type AppPropsType = {
+  featuredMovie: MovieType;
+  movies: MovieType[];
+  reviews: ReviewType[];
+  myListMovies: MovieType[];
 }
 
-type AppPropType = {
-  featuredMovie: FeaturedMoviePropsType;
-}
-
-function App(appProp: AppPropType): JSX.Element {
+function App({featuredMovie, movies, reviews, myListMovies}: AppPropsType): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path={PageRoute.Home}
-          element={<HomeScreen {...appProp.featuredMovie}/>}
+          element={
+            <HomeScreen
+              featuredMovie={featuredMovie}
+              movies={movies}
+              myListMoviesQty={myListMovies.length}
+            />
+          }
         />
         <Route
           path={PageRoute.SignIn}
@@ -34,26 +38,26 @@ function App(appProp: AppPropType): JSX.Element {
         <Route
           path={PageRoute.MyList}
           element={
-            <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}>
-              <MyListScreen />
+            <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
+              <MyListScreen myListMovies={myListMovies}/>
             </PrivateRoute>
           }
         />
         <Route
           path={`${PageRoute.Movie}/:id`}
-          element={<MovieScreen />}
+          element={<MovieScreen movies={movies}/>}
         />
         <Route
           path={`${PageRoute.Movie}/:id${PageRoute.AddReview}`}
           element={
-            <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}>
-              <AddReviewScreen />
+            <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
+              <AddReviewScreen movies={movies}/>
             </PrivateRoute>
           }
         />
         <Route
           path={`${PageRoute.Player}/:id`}
-          element={<PlayerScreen />}
+          element={<PlayerScreen movies={movies}/>}
         />
         <Route
           path='*'

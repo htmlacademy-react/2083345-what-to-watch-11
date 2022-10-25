@@ -1,27 +1,20 @@
-import MovieCard from '../../components/movie-card/movie-card';
 import Logo from '../../components/logo/logo';
 import Footer from '../../components/footer/footer';
+import {MovieType} from '../../types/types';
+import MovieList from '../../components/movie-list/movie-list';
 
-type FeaturedMoviePropsType = {
-  title: string;
-  genre: string;
-  releaseYear: number;
+export type HomeScreenPropsType = {
+  featuredMovie: MovieType;
+  movies: MovieType[];
+  myListMoviesQty: number;
 }
 
-export default function HomeScreen(featuredProps: FeaturedMoviePropsType): JSX.Element {
+export default function HomeScreen({featuredMovie, movies, myListMoviesQty}: HomeScreenPropsType): JSX.Element {
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="UTF-8"/>
-        <title>WTW</title>
-        <meta name="robots" content="noindex, nofollow"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="stylesheet" href="css/main.min.css"/>
-      </head>
-
+    <>
       <section className="film-card">
         <div className="film-card__bg">
-          <img src="img/bg-the-grand-budapest-hotel.jpg" alt={featuredProps.title}/>
+          <img src={featuredMovie.backgroundImage} alt={featuredMovie.name}/>
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -44,16 +37,16 @@ export default function HomeScreen(featuredProps: FeaturedMoviePropsType): JSX.E
         <div className="film-card__wrap">
           <div className="film-card__info">
             <div className="film-card__poster">
-              <img src="img/the-grand-budapest-hotel-poster.jpg" alt={`${featuredProps.title} poster`} width="218"
+              <img src={featuredMovie.posterImage} alt={`${featuredMovie.name} poster`} width="218"
                 height="327"
               />
             </div>
 
             <div className="film-card__desc">
-              <h2 className="film-card__title">{featuredProps.title}</h2>
+              <h2 className="film-card__title">{featuredMovie.name}</h2>
               <p className="film-card__meta">
-                <span className="film-card__genre">{featuredProps.genre}</span>
-                <span className="film-card__year">{featuredProps.releaseYear}</span>
+                <span className="film-card__genre">{featuredMovie.genre}</span>
+                <span className="film-card__year">{featuredMovie.released}</span>
               </p>
 
               <div className="film-card__buttons">
@@ -68,7 +61,7 @@ export default function HomeScreen(featuredProps: FeaturedMoviePropsType): JSX.E
                     <use xlinkHref="#add"></use>
                   </svg>
                   <span>My list</span>
-                  <span className="film-card__count">9</span>
+                  <span className="film-card__count">{myListMoviesQty}</span>
                 </button>
               </div>
             </div>
@@ -76,7 +69,9 @@ export default function HomeScreen(featuredProps: FeaturedMoviePropsType): JSX.E
         </div>
       </section>
 
-      <div className="page-content">
+      <div className="page-content"
+        style={{backgroundImage: `linear-gradient(-180deg, ${featuredMovie.backgroundColor} -500%, #000000 100%)`}}
+      >
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
@@ -113,11 +108,7 @@ export default function HomeScreen(featuredProps: FeaturedMoviePropsType): JSX.E
             </li>
           </ul>
 
-          <div className="catalog__films-list">
-            {/* eslint-disable-next-line react/jsx-key,@typescript-eslint/no-unsafe-assignment*/}
-            {[...Array(20)].map((element: number) => <MovieCard/>)}
-            {/*Жалуется на отсутствие key и небезопасный any в ...Array^*/}
-          </div>
+          <MovieList movies={movies}/>
 
           <div className="catalog__more">
             <button className="catalog__button" type="button">Show more</button>
@@ -126,6 +117,6 @@ export default function HomeScreen(featuredProps: FeaturedMoviePropsType): JSX.E
 
         <Footer/>
       </div>
-    </html>
+    </>
   );
 }
