@@ -20,3 +20,5 @@ export enum MovieScreenTab {
   Details,
   Reviews
 }
+
+export const allGenresFilterName = 'All Genres';
