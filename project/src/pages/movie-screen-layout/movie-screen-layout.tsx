@@ -1,26 +1,35 @@
 import Logo from '../../components/logo/logo';
 import Footer from '../../components/footer/footer';
 import {Outlet, useNavigate, useParams} from 'react-router-dom';
-import {MovieType} from '../../types/types';
 import NotFoundScreen from '../not-found/not-found-screen';
 import {Link} from 'react-router-dom';
-import {PageRoute} from '../../const';
+import {PageRoute, PLACEHOLDER_MOVIE} from '../../const';
 import MovieList from '../../components/movie-list/movie-list';
+import {useAppDispatch, useAppSelector} from '../../hooks/store-hooks';
+import {fetchActiveMovieDataAction} from '../../store/api-actions';
+import LoadingSpinner from '../../components/loading/loading-spinner';
 
-export type MovieScreenPropType = {
-  movies: MovieType[];
-  myListMoviesQty: number;
-}
 
-export default function MovieScreenLayout({movies, myListMoviesQty}: MovieScreenPropType): JSX.Element {
+export default function MovieScreenLayout(): JSX.Element {
   const params = useParams();
   const navigate = useNavigate();
-  const movie = movies.find((item:MovieType) => item.id.toString() === params.id);
-  if (movie === undefined) {
+  const dispatch = useAppDispatch();
+
+  const movie = useAppSelector((state) => state.active.movie);
+  const similar = useAppSelector((state) => state.active.similar);
+  const myListMoviesQty = useAppSelector((state) => state.myList.length);
+  const isDataLoading = useAppSelector((state) => state.isDataLoading);
+
+  if (params.id !== movie.id.toString()) {
+    dispatch(fetchActiveMovieDataAction(params.id as string));
+  }
+
+  if (isDataLoading) {
+    return <LoadingSpinner/>;
+  }
+  if (movie === PLACEHOLDER_MOVIE) {
     return <NotFoundScreen />;
   }
-  const similarMovies = movies.slice(0, 4);
-
   return (
     <>
       <section className="film-card film-card--full" style={{background: `${movie.backgroundColor}80`}}>
@@ -83,7 +92,7 @@ export default function MovieScreenLayout({movies, myListMoviesQty}: MovieScreen
         <section className="catalog catalog--like-this">
           <h2 className="catalog__title">More like this</h2>
 
-          <MovieList movies={similarMovies}/>
+          <MovieList movies={similar}/>
         </section>
         <Footer/>
       </div>
