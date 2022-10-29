@@ -39,9 +39,8 @@ export type NewReviewType = {
 export type StateType = {
   active: ActiveMovieDataType;
   home: HomeDataType;
-  myList: MovieType[];
-  authStatus: AuthorizationStatus;
-  isDataLoading: boolean;
+  api: ApiDataType;
+  user: UserDataType;
 }
 
 export type ActiveMovieDataType = {
@@ -55,3 +54,24 @@ export type HomeDataType = {
   selectedGenre: string;
   movies: MovieType[];
 }
+
+export type ApiDataType = {
+  authStatus: AuthorizationStatus;
+  isDataLoading: boolean;
+  error: string | null;
+}
+
+export type AuthDataType = {
+  login: string;
+  password: string;
+};
+
+export type UserDataType = {
+  id: number | null;
+  name: string | null;
+  email: string | null;
+  token: string | null;
+  avatarUrl: string | null;
+  myList: MovieType[];
+};
+

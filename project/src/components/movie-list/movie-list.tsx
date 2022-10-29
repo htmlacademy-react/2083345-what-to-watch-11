@@ -4,15 +4,13 @@ import {BaseSyntheticEvent, useEffect, useState} from 'react';
 import {useAppSelector} from '../../hooks/store-hooks';
 import {ALL_GENRES_FILTER_NAME, MAX_MOVIES_SHOWN_HOME} from '../../const';
 import ShowMore from '../show-more/show-more';
-import LoadingSpinner from '../loading/loading-spinner';
 
 export type MovieListPropsType = {
   movies: MovieType[];
 }
 
 export default function MovieList({movies}: MovieListPropsType): JSX.Element {
-  const selectedGenre = useAppSelector((state) => state.home.selectedGenre);
-  const isDataLoading = useAppSelector((state) => state.isDataLoading);
+  const selectedGenre: string = useAppSelector((state) => state.home.selectedGenre);
   const moviesFiltered: MovieType[] = [];
   movies.forEach((movie: MovieType) => {
     if (selectedGenre === ALL_GENRES_FILTER_NAME || selectedGenre === movie.genre) {
@@ -26,7 +24,7 @@ export default function MovieList({movies}: MovieListPropsType): JSX.Element {
   const handleMouseOver = (evt: BaseSyntheticEvent) => {
     const target = evt.target as Element;
     const parent = target.parentElement as Element;
-    if (parent.classList.contains('small-film-card') || target.tagName === 'A') {
+    if (parent.classList.contains('small-film-card') || target.className === 'small-film-card__link') {
       setActiveId(parent.id);
     } else {
       setActiveId(null);
@@ -39,11 +37,7 @@ export default function MovieList({movies}: MovieListPropsType): JSX.Element {
 
   useEffect(() => {
     setMoviesShown(Math.min(moviesFiltered.length, MAX_MOVIES_SHOWN_HOME));
-  }, [selectedGenre, movies]);
-
-  if (isDataLoading) {
-    return <LoadingSpinner/>;
-  }
+  }, [selectedGenre, moviesFiltered.length]);
 
   return (
     <>
