@@ -1,35 +1,39 @@
 import Logo from '../../components/logo/logo';
-import {useNavigate} from 'react-router-dom';
-import NotFoundScreen from '../not-found/not-found-screen';
-import {AuthorizationStatus, PageRoute} from '../../const';
+import {useParams} from 'react-router-dom';
+import {PageRoute} from '../../const';
 import AddReviewForm from '../../components/add-review-form/add-review-form';
 import {Link} from 'react-router-dom';
 import User from '../../components/user/user';
+import {useAppDispatch, useAppSelector} from '../../hooks/store-hooks';
+import {fetchActiveMovieDataAction} from '../../store/api-actions';
+import {useEffect} from 'react';
+import {MovieType} from '../../types/types';
 import LoadingSpinner from '../../components/loading/loading-spinner';
-import {useAppSelector} from '../../hooks/store-hooks';
 
 export default function AddReviewScreen(): JSX.Element {
-  const navigate = useNavigate();
+  const params = useParams();
+  const dispatch = useAppDispatch();
 
-  const movie = useAppSelector((state) => state.active.movie);
-  const isDataLoading = useAppSelector((state) => state.api.isDataLoading);
-  const authStatus = useAppSelector((state) => state.api.authStatus);
+  useEffect(() => {
+    if (movie?.id.toString() !== params.id) {
+      dispatch(fetchActiveMovieDataAction(params.id as string));
+    }
+  }, []);
 
-  if (isDataLoading) {
-    return <LoadingSpinner/>;
-  }
-  if (authStatus !== AuthorizationStatus.Auth) {
-    navigate(PageRoute.SignIn);
-  }
-  if (movie === undefined) {
-    return <NotFoundScreen />;
+  const movie: MovieType | null = useAppSelector((state) => state.active.movie);
+  const isLoading: boolean = useAppSelector((state) => state.api.isDataLoading);
+
+  if (isLoading || movie?.id.toString() !== params.id) {
+    return (
+      <LoadingSpinner/>
+    );
   }
 
   return (
-    <section className="film-card film-card--full" style={{background: movie.backgroundColor}}>
+    <section className="film-card film-card--full" style={{background: movie?.backgroundColor}}>
       <div className="film-card__header">
         <div className="film-card__bg">
-          <img src={movie.backgroundImage} alt={movie.name}/>
+          <img src={movie?.backgroundImage} alt={movie?.name}/>
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -40,7 +44,7 @@ export default function AddReviewScreen(): JSX.Element {
           <nav className="breadcrumbs">
             <ul className="breadcrumbs__list">
               <li className="breadcrumbs__item">
-                <Link to={`${PageRoute.Movie}/${movie.id}`} className="breadcrumbs__link">{movie.name}</Link>
+                <Link to={`${PageRoute.Movie}/${movie?.id as number}`} className="breadcrumbs__link">{movie?.name}</Link>
               </li>
               <li className="breadcrumbs__item">
                 <a className="breadcrumbs__link">Add review</a>
@@ -52,14 +56,14 @@ export default function AddReviewScreen(): JSX.Element {
         </header>
 
         <div className="film-card__poster film-card__poster--small">
-          <img src={movie.posterImage} alt={`${movie.name} poster`} width="218"
+          <img src={movie?.posterImage} alt={`${movie?.name as string} poster`} width="218"
             height="327"
           />
         </div>
       </div>
 
       <div className="add-review">
-        <AddReviewForm reviewedMovieId={movie.id}/>
+        <AddReviewForm/>
       </div>
     </section>
   );

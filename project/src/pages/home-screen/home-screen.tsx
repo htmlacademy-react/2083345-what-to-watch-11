@@ -4,20 +4,36 @@ import MovieList from '../../components/movie-list/movie-list';
 import GenresList from '../../components/genres-list/genres-list';
 import {useNavigate} from 'react-router-dom';
 import {AuthorizationStatus, PageRoute} from '../../const';
-import {useAppSelector} from '../../hooks/store-hooks';
+import {useAppDispatch, useAppSelector} from '../../hooks/store-hooks';
 import User from '../../components/user/user';
+import {useEffect} from 'react';
+import {fetchMoviesHomeAction} from '../../store/api-actions';
+import LoadingSpinner from '../../components/loading/loading-spinner';
+
 
 export default function HomeScreen(): JSX.Element {
   const featuredMovie = useAppSelector((state) => state.home.featuredMovie);
   const movies = useAppSelector((state) => state.home.movies);
-  const myListMoviesQty = useAppSelector((state) => state.user?.myList.length);
+  const myListMoviesQty = useAppSelector((state) => state.user.myList?.length);
   const authStatus = useAppSelector((state) => state.api.authStatus);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchMoviesHomeAction());
+  }, []);
+
+  if (!movies.length || !featuredMovie) {
+    return (
+      <LoadingSpinner/>
+    );
+  }
+
   return (
     <>
       <section className="film-card">
         <div className="film-card__bg">
-          <img src={featuredMovie.backgroundImage} alt={featuredMovie.name}/>
+          <img src={featuredMovie?.backgroundImage} alt={featuredMovie?.name}/>
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -30,20 +46,20 @@ export default function HomeScreen(): JSX.Element {
         <div className="film-card__wrap">
           <div className="film-card__info">
             <div className="film-card__poster">
-              <img src={featuredMovie.posterImage} alt={`${featuredMovie.name} poster`} width="218"
+              <img src={featuredMovie?.posterImage} alt={`${featuredMovie?.name} poster`} width="218"
                 height="327"
               />
             </div>
 
             <div className="film-card__desc">
-              <h2 className="film-card__title">{featuredMovie.name}</h2>
+              <h2 className="film-card__title">{featuredMovie?.name}</h2>
               <p className="film-card__meta">
-                <span className="film-card__genre">{featuredMovie.genre}</span>
-                <span className="film-card__year">{featuredMovie.released}</span>
+                <span className="film-card__genre">{featuredMovie?.genre}</span>
+                <span className="film-card__year">{featuredMovie?.released}</span>
               </p>
 
               <div className="film-card__buttons">
-                <button onClick={() => navigate(`${PageRoute.Player}/${featuredMovie.id}`)} className="btn btn--play film-card__button" type="button">
+                <button onClick={() => navigate(`${PageRoute.Player}/${featuredMovie?.id}`)} className="btn btn--play film-card__button" type="button">
                   <svg viewBox="0 0 19 19" width="19" height="19">
                     <use xlinkHref="#play-s"></use>
                   </svg>
@@ -65,7 +81,7 @@ export default function HomeScreen(): JSX.Element {
       </section>
 
       <div className="page-content"
-        style={{backgroundImage: `linear-gradient(-180deg, ${featuredMovie.backgroundColor} -500%, #000000 100%)`}}
+        style={{backgroundImage: `linear-gradient(-180deg, ${featuredMovie?.backgroundColor} -500%, #000000 100%)`}}
       >
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
@@ -74,7 +90,7 @@ export default function HomeScreen(): JSX.Element {
             <GenresList movies={movies}/>
           </ul>
 
-          <MovieList movies={movies}/>
+          <MovieList movies={movies} isAtHome/>
 
         </section>
 

@@ -3,19 +3,19 @@ import {
   genreChangeAction,
   loadActiveMovieDataAction,
   loadHomeMovieDataAction, loadMyListMoviesAction, loadUserDataAction,
-  requireAuthorizationAction, setErrorAction, setLoadingStatusAction
+  requireAuthorizationAction, setLoadingStatusAction, updateUserReviewsAction
 } from './action';
-import {ALL_GENRES_FILTER_NAME, AuthorizationStatus, PLACEHOLDER_MOVIE} from '../const';
+import {ALL_GENRES_FILTER_NAME, AuthorizationStatus} from '../const';
 import {StateType} from '../types/types';
 
 const initialState: StateType = {
   active: {
-    movie: PLACEHOLDER_MOVIE,
+    movie: null,
     similar: [],
     reviews: [],
   },
   home: {
-    featuredMovie: PLACEHOLDER_MOVIE,
+    featuredMovie: null,
     selectedGenre: ALL_GENRES_FILTER_NAME,
     movies: [],
   },
@@ -30,7 +30,6 @@ const initialState: StateType = {
   api: {
     authStatus: AuthorizationStatus.Unknown,
     isDataLoading: false,
-    error: null
   }
 };
 
@@ -46,6 +45,9 @@ const reducer = createReducer(initialState, (builder) => {
     .addCase(loadActiveMovieDataAction, (state, action) => {
       state.active = action.payload;
     })
+    .addCase(updateUserReviewsAction, (state, action) => {
+      state.active.reviews = action.payload;
+    })
     .addCase(loadUserDataAction, (state, action) => {
       state.user = action.payload;
     })
@@ -57,9 +59,6 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(setLoadingStatusAction, (state, action) => {
       state.api.isDataLoading = action.payload;
-    })
-    .addCase(setErrorAction, (state, action) => {
-      state.api.error = action.payload;
     });
 });
 

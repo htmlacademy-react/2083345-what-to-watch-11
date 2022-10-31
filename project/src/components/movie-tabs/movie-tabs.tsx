@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {MovieScreenTab, PageRoute} from '../../const';
 import MovieOverview from '../movie-overview/movie-overview';
 import MovieDetails from '../movie-details/movie-details';
-import MovieReviews from '../../movie-reviews/movie-reviews';
+import MovieReviews from '../movie-reviews/movie-reviews';
 import {useAppSelector} from '../../hooks/store-hooks';
 
 export type MovieTabsPropsData = {
@@ -21,14 +21,18 @@ const renderTab = (tab: number, movie: MovieType, reviews: ReviewType[]) => {
   }
 };
 
-export default function MovieTabs({tab}: MovieTabsPropsData): JSX.Element {
+export default function MovieTabs({tab}: MovieTabsPropsData): JSX.Element | null {
   const movie: MovieType | null = useAppSelector((state) => state.active.movie);
-  const reviews: ReviewType[] = useAppSelector((state) => state.active.reviews);
+  const reviews: ReviewType[] | null = useAppSelector((state) => state.active.reviews);
+
+  if (!movie || !reviews) {
+    return null;
+  }
 
   return (
     <div className="film-card__info">
       <div className="film-card__poster film-card__poster--big">
-        <img src={movie.posterImage} alt={`${movie.name} poster`} width="218"
+        <img src={movie?.posterImage} alt={`${movie.name} poster`} width="218"
           height="327"
         />
       </div>
