@@ -1,19 +1,15 @@
 import {createAction} from '@reduxjs/toolkit';
 import {AuthorizationStatus} from '../const';
-import {ActiveMovieDataType, HomeDataType, MovieType, ReviewType, UserDataType} from '../types/types';
-import {Omit} from '@reduxjs/toolkit/dist/tsHelpers';
+import {ReviewType} from '../types/types';
 
 export const genreChangeAction = createAction('genreHome/change', (newGenre) => ({
   payload: newGenre as string,
 }));
 
-export const loadHomeMovieDataAction = createAction<Omit<HomeDataType, 'selectedGenre'>>('data/apiGetMoviesHome');
-export const loadActiveMovieDataAction = createAction<ActiveMovieDataType>('data/apiGetMovieById');
-export const loadMyListMoviesAction = createAction<MovieType[]>('data/apiGetMyList');
-export const loadUserDataAction = createAction<UserDataType>('data/apiGetUserData');
-export const updateUserReviewsAction = createAction<ReviewType[]>('data/apiPostUserReview');
+export const updateUserReviewsAction = createAction<ReviewType[]>('active/updateReviews');
+export const updateAuthStatusAction = createAction<AuthorizationStatus>('user/requireAuth');
 
-export const setLoadingStatusAction = createAction<boolean>('api/setStatus');
-export const redirectToRouteAction = createAction<string>('api/redirectToRoute');
-export const requireAuthorizationAction = createAction<AuthorizationStatus>('api/userRequireAuth');
+export const setLoadingStatusAction = createAction<boolean>('service/setLoadingStatus');
+export const redirectToRouteAction = createAction<string>('service/redirectToRoute');
+
 
