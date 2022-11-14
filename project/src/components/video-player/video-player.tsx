@@ -18,7 +18,7 @@ export default function VideoPlayer({movie}: VideoPlayerPropsType): JSX.Element 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (videoRef.current === null) {
+    if (!videoRef.current) {
       return;
     }
     if (isPlaying) {
@@ -26,7 +26,7 @@ export default function VideoPlayer({movie}: VideoPlayerPropsType): JSX.Element 
       return;
     }
 
-    videoRef.current?.addEventListener('timeupdate', handleTimeUpdate);
+    videoRef.current.addEventListener('timeupdate', handleTimeUpdate);
     videoRef.current.pause();
   }, [isPlaying, timeRemaining]);
 
