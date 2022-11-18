@@ -2,11 +2,12 @@ import {ActiveType} from '../../types/state';
 import {createSlice} from '@reduxjs/toolkit';
 import {Namespace} from '../../const';
 import {fetchActiveDataAction, postToggleMyListMovie, postUserReviewAction} from '../api-actions';
+import {MovieType, ReviewType} from '../../types/types';
 
 export const initialState: ActiveType = {
   movie: null,
-  similar: [],
-  reviews: [],
+  similarMovies: [] as MovieType[],
+  reviews: [] as ReviewType[],
 };
 
 export const active = createSlice({
@@ -17,7 +18,7 @@ export const active = createSlice({
     builder
       .addCase(fetchActiveDataAction.fulfilled, (state, action) => {
         state.movie = action.payload.movie;
-        state.similar = action.payload.similar;
+        state.similarMovies = action.payload.similarMovies;
         state.reviews = action.payload.reviews;
       });
 
